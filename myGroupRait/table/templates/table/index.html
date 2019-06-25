@@ -1,0 +1,50 @@
+{% if mostSuccessfulStudents %}
+<style type="text/css">
+	a:visited{
+		color:blue;
+		text-decoration: none;
+	}
+	body{
+		background: pink;
+		font-family: sans-serif;
+	}
+	a{
+		text-decoration: none;
+	}
+	td{
+		border: 2px solid black;
+		background:white;
+		text-align: center;
+	}
+	table{
+
+	}
+	#header{
+		background: orange;
+
+		border-radius: 5px;
+		text-align: center;
+		font-size: 30px;
+		width: 1200px;
+		height: 135px;
+	}
+	h1{
+		background: black;
+		color:white;
+	}
+	div{
+		padding: 20px;
+	}
+</style><center>
+	<div id="header"><h1>Рейтинг моей группы</h1></div>
+	</center>
+	<div></div>
+	<table cellspacing="0" style="border:2px solid black; font-size: 50px;" align="center">
+	<tr><td style="background: red;">name</td><td style="background: blue ;">surname</td><td style="background: green;">age</td><td style="background: yellow;">points</td></tr>
+	{% for q in mostSuccessfulStudents %}
+		<tr><td style="">{{q.name}}</td><td style=""><a href="/{{q.points}}/">{{q.surname}}</a></td><td style=""> {{q.age}}</td><td style="">{{q.points}}</td></tr>
+	{% endfor %}
+	</table>
+{% else %}
+	<p>No students with that point</p>
+{% endif %}

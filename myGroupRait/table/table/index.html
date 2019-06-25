@@ -1,9 +1,0 @@
-{% if mostSuccessfulStudents %}
-    <ul>
-    {% for question in mostSuccessfulStudents %}
-        <li><a href="/{{ pointf }}/">{{ question.name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
