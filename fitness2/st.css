@@ -1,0 +1,57 @@
+body{
+	background: url(http://desktopwallpapers.org.ua/pic/201111/1600x1200/desktopwallpapers.org.ua-8296.jpg);
+}
+table{
+	width: 1100px;
+}
+thead{
+	width: 1100px;
+}
+caption{
+	height: 100px;
+	background: #4a4a4a;
+	font-family: malibu;
+	text-align: center;
+	font-size: 75px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+
+}
+@font-face{
+	font-family: malibu;
+	src:url(malibu.ttf);
+}
+li{
+	color: white;
+	font-size: 50px;
+	text-align: left;
+	text-decoration:underline;
+}
+p{
+	font-size: 50px;
+	color: white;
+	font-family: Logotip;
+	text-align: left
+}
+div:hover{
+background: linear-gradient(#cfefa5,#818977);
+}
+a{
+	text-decoration: none;
+	color:white;
+}
+a:hover{
+	text-decoration: none;
+	color: white;
+}
+a:visited{
+	text-decoration: none;
+	color:white;
+}
+a:active{
+	text-decoration: none;
+	color:white;
+}
+li:hover{
+	color:red;
+}
