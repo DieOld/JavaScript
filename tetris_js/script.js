@@ -1,4 +1,4 @@
-let canvas, ctx, curent_color;
+let canvas, ctx, current_color, current_height;
 let field_mass, play_field, animation;
 window.onload = function () {
 	canvas = document.getElementById('canvas_id');
@@ -11,7 +11,11 @@ window.onload = function () {
     }
     draw_field();
 }
-
+function clearly_start(){
+	get_figure();
+	draw_figure();
+	start();
+};
 function create_field(length) {
     let arr = new Array(length || 0),
         i = length;
@@ -42,42 +46,49 @@ function get_figure() {
 	if(color == 0){
 		color = get_random_int(1,8);
 	}
-	curent_color = color;
+	current_color = color;
 	if(s === 0 ){
 		for(let i = 0; i < 5; i ++){
 			play_field[5][i] = 10+color;
 		}
+		current_height = 5;
 	}else if(s === 1){
 		play_field[5][0] = 10+color;
 		play_field[6][0] = 10+color;
 		play_field[5][1] = 10+color;
 		play_field[6][1] = 10+color;
+		current_height = 2;
 	}else if(s === 2 ){
 		for(let i = 0; i < 4; i ++){
 			play_field[5][i] = 10+color;
 		}
 			play_field[6][3] = 10+color;
+			current_height = 4;
 	}else if(s === 3){
 
 		for(let i = 0; i < 4; i ++){
 			play_field[5][i] = 10+color;
 		}
 		play_field[4][3] = 10+color;
+		current_height = 4;
 	}else if(s === 4){
 		play_field[5][0] = 10+color;
 		play_field[6][0] = 10+color;
 		play_field[5][1] = 10+color;
 		play_field[4][1] = 10+color;
+		current_height = 2;
 	}else if(s === 5){
 		play_field[4][0] = 10+color;
 		play_field[5][0] = 10+color;
 		play_field[5][1] = 10+color;
 		play_field[6][1] = 10+color;
+		current_height = 2;
 	}else if(s === 6){
 		play_field[5][0] = 10+color;
 		play_field[5][1] = 10+color;
 		play_field[4][1] = 10+color;
 		play_field[6][1] = 10+color;
+		current_height =2;
 	}
 }
 
@@ -138,7 +149,7 @@ function move_figure_down() {
 	}	
 	
 	for(let x = positions_of_figure_x.length-1; x>=0; x--){	
-			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]+1] = 10+curent_color;
+			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]+1] = 10+current_color;
 			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
 	}
 	console.log(positions_of_figure_x);
@@ -163,7 +174,7 @@ function move_figure_right() {
 	}	
 	
 	for(let x = positions_of_figure_x.length-1; x>=0; x--){	
-			play_field[positions_of_figure_x[x]+1][positions_of_figure_y[x]] = 10+curent_color;
+			play_field[positions_of_figure_x[x]+1][positions_of_figure_y[x]] = 10+current_color;
 			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
 	}
 	console.log(positions_of_figure_x);
@@ -188,7 +199,7 @@ function move_figure_left() {
 	}	
 	
 	for(let x = 0; x<positions_of_figure_x.length; x++){	
-			play_field[positions_of_figure_x[x]-1][positions_of_figure_y[x]] = 10+curent_color;
+			play_field[positions_of_figure_x[x]-1][positions_of_figure_y[x]] = 10+current_color;
 			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
 	}
 	console.log(positions_of_figure_x);
@@ -209,7 +220,11 @@ function start() {
 		fix_figure();
 		get_figure();
 		draw_figure();
-		start();
+		if(free_space()-current_height<0){
+			lose();
+		}else{
+		start();}
+
 	}
 	},500);
 }
@@ -232,7 +247,7 @@ function fix_figure(){
 	for(let x =0; x<10; x++){
 		for(let y = 0; y < 16; y++){
 			if(play_field[x][y] >10 && play_field[x][y]<20){
-				play_field[x][y] = 20+curent_color;
+				play_field[x][y] = 20+current_color;
 			}
 		}
 	}	
@@ -263,6 +278,20 @@ function next_step_is_fix(){
 	}
 }
 
-function check_for_lose() {
-	
+function lose() {
+	clearInterval(animation);
+	alert('u lose');
+}
+
+function free_space() {
+	let default_var = 15;
+	for(let x=4;x<7; x++){
+		for(let y=0; y<16;y++){
+			if(play_field[x][y] >20){
+			return y;
+			break;
+			}
+		}
+	}
+	return default_var;
 }
