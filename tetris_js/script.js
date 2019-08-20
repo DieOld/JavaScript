@@ -1,5 +1,5 @@
 let canvas, ctx, current_color, current_height;
-let status, play_field, animation, current_type;
+let status, play_field, animation, current_type, allowed_left =1, allowed_right=1,score=0;
 window.onload = function () {
 	canvas = document.getElementById('canvas_id');
 	ctx = canvas.getContext('2d');
@@ -171,55 +171,110 @@ function move_figure_down() {
 	draw_field();
 	draw_figure();
 }
-
-function move_figure_right() {
-	let positions_of_figure_x = [];
-	let positions_of_figure_y = [];
-	let a =0;
-	for(let x =0; x<10; x++){
-		for(let y = 0; y < 16; y++){
-			if(play_field[x][y] >= 10 && play_field[x][y]<20){
-				positions_of_figure_x[a] = x;
-				positions_of_figure_y[a] = y;
-				a++;
+function get_pos_x() {
+	let arr = [];
+	let h=0;
+	for( let x=0;x<10;x++){
+		for(let y=0;y<16;y++){
+			if(play_field[x][y]>=10 && play_field[x][y]<20){
+				arr[h] = x;
+				h++;
+			}else{
+				continue;
 			}
 		}
 	}
-
-	for(let x = positions_of_figure_x.length-1; x>=0; x--){
-			play_field[positions_of_figure_x[x]+1][positions_of_figure_y[x]] = 10+current_color;
-			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
+	return arr;
+}
+function get_pos_y() {
+	let arr = [];
+	let h=0;
+	for( let x=0;x<10;x++){
+		for(let y=0;y<16;y++){
+			if(play_field[x][y]>=10 && play_field[x][y]<20){
+				arr[h] = y;
+				h++;
+			}else{
+				continue;
+			}
+		}
 	}
-	console.log(positions_of_figure_x);
-	console.log(positions_of_figure_y);
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	draw_field();
-	draw_figure();
+	return arr;
+}
+function check_for_allow_right() {
+	for(let x =0 ;x< get_pos_x().length-1; x++){
+		if(play_field[get_pos_x()[x]+1][get_pos_y()[x]] >20){
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 
-function move_figure_left() {
-	let positions_of_figure_x = [];
-	let positions_of_figure_y = [];
-	let a=0;
-	for(let x =0; x<10; x++){
-		for(let y = 0; y < 16; y++){
-			if(play_field[x][y] >= 10 && play_field[x][y]<20){
-				positions_of_figure_x[a] = x;
-				positions_of_figure_y[a] = y;
-				a++;
-			}
+function check_for_allow_left() {
+	for(let x =0 ;x< get_pos_x().length-1; x++){
+		if(play_field[get_pos_x()[x]-1][get_pos_y()[x]] >20){
+			return false;
+		}else{
+			return true;
 		}
 	}
+}
+function move_figure_right() {
+	if(check_for_allow_right()){
+		let positions_of_figure_x = [];
+		let positions_of_figure_y = [];
+		let a = 0;
+		for (let x = 0; x < 10; x++) {
+			for (let y = 0; y < 16; y++) {
+				if (play_field[x][y] >= 10 && play_field[x][y] < 20) {
+					positions_of_figure_x[a] = x;
+					positions_of_figure_y[a] = y;
+					a++;
+				}
 
-	for(let x = 0; x<positions_of_figure_x.length; x++){
-			play_field[positions_of_figure_x[x]-1][positions_of_figure_y[x]] = 10+current_color;
+			}
+		}
+
+		for (let x = positions_of_figure_x.length - 1; x >= 0; x--) {
+
+			play_field[positions_of_figure_x[x] + 1][positions_of_figure_y[x]] = 10 + current_color;
 			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
+		}
+
+		console.log(positions_of_figure_x);
+		console.log(positions_of_figure_y);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		draw_field();
+		draw_figure();
 	}
-	console.log(positions_of_figure_x);
-	console.log(positions_of_figure_y);
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	draw_field();
-	draw_figure();
+	}
+
+function move_figure_left() {
+	if(check_for_allow_left()) {
+		let positions_of_figure_x = [];
+		let positions_of_figure_y = [];
+		let a = 0;
+		for (let x = 0; x < 10; x++) {
+			for (let y = 0; y < 16; y++) {
+				if (play_field[x][y] >= 10 && play_field[x][y] < 20) {
+					positions_of_figure_x[a] = x;
+					positions_of_figure_y[a] = y;
+					a++;
+				}
+			}
+		}
+
+		for (let x = 0; x < positions_of_figure_x.length; x++) {
+			play_field[positions_of_figure_x[x] - 1][positions_of_figure_y[x]] = 10 + current_color;
+			play_field[positions_of_figure_x[x]][positions_of_figure_y[x]] = 0;
+		}
+		console.log(positions_of_figure_x);
+		console.log(positions_of_figure_y);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		draw_field();
+		draw_figure();
+	}
 }
 
 function start() {
@@ -231,8 +286,7 @@ function start() {
 	}else{
 		clearInterval(animation);
 		fix_figure();
-		get_figure();
-		draw_figure();
+		check_for_line_and_shift();
 		if(free_space()-current_height<0){
 			lose();
 		}else{
@@ -489,4 +543,50 @@ function flip(){
 	ctx.clearRect(0,0,canvas.width, canvas.height);
 	draw_field();
 	draw_figure();
+}
+
+function check_for_line_and_shift() {
+	let line_x = [];
+	let line_y = [];
+	let temp =0;
+	let s=0;
+	for(let y=0; y<16; y++){
+		for(let x=0; x<10; x++){
+			if(play_field[x][y] >=20){
+				temp ++;
+			}
+		}
+		if(temp == 10){
+			line_y[s] = y;
+			s++;
+		}
+		temp =0;
+	}
+	s=0;
+	for(let y =0; y<line_y.length; y++){
+		for(let x=0; x<10; x++){
+			play_field[x][line_y[s]]=0;
+		}
+		s++;
+	}
+	score +=(line_y.length*10);
+	document.title ="score: "+score ;
+	let shift_temp =0;
+
+	if(line_y.length>0){
+	for(let y=Math.min(...line_y)-1;y>=0; y--){
+		for(let x =0; x<10;x++){
+			if(play_field[x][y]>20){
+				shift_temp = play_field[x][y];
+				play_field[x][y] =0;
+				play_field[x][y+line_y.length] = shift_temp;
+				console.log(shift_temp);
+			}
+		}
+	}}
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+	draw_field();
+	get_figure();
+	draw_figure();
+	console.log(line_y);
 }
