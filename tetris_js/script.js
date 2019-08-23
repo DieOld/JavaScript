@@ -1,17 +1,28 @@
-let canvas, ctx, current_color, current_height;
+let canvas, ctx,ctx2,canvas2,figure_field, current_color, current_height;
 let status, play_field, animation, current_type, allowed_left =1, allowed_right=1,score=0;
+let score_output, next_figure, next_color;
 window.onload = function () {
 	canvas = document.getElementById('canvas_id');
+	canvas2 = document.getElementById('next_figure');
+	ctx2 = canvas2.getContext('2d');
 	ctx = canvas.getContext('2d');
 	play_field = create_field(10,20);
+	figure_field = create_field(5,5)
 	for(let x=0; x<10; x++){
     	for(let b=0; b<20; b++){
     		play_field[x][b] = 0;
     	}
     }
+	for(let x=0; x<5; x++){
+		for(let b=0; b<5; b++){
+			figure_field[x][b] = 0;
+		}
+	}
     draw_field();
+	score_output = document.getElementById('score').innerHTML;
 }
 function clearly_start(){
+	get_next_figure();
 	get_figure();
 	draw_figure();
 	start();
@@ -41,11 +52,8 @@ function get_random_int(min, max) {
 }
 
 function get_figure() {
-	let s = get_random_int(0,7);
-	let color = get_random_int(1,8);
-	if(color == 0){
-		color = get_random_int(1,8);
-	}
+	let s = next_figure;
+	let color = next_color;
 	current_color = color;
 	if(s === 0 ){
 		for(let i = 0; i < 4; i ++){
@@ -103,7 +111,62 @@ function get_figure() {
 		current_type = 't';
 	}
 	status = 0;
+	get_next_figure();
 }
+
+function get_next_figure() {
+	for(let x=0; x<5; x++){
+		for(let y =0; y<5; y++){
+			figure_field[x][y] =0;
+		}
+	}
+	ctx2.clearRect(0,0,canvas2.width, canvas2.height);
+	let s = get_random_int(0,7);
+	let color = get_random_int(1,6);
+	next_figure = s;
+	next_color = color;
+	if(s === 0 ){
+		for(let i = 0; i < 4; i ++){
+			figure_field[2][i] = 10+color;
+		}
+	}else if(s === 1){
+		figure_field[2][1] = 10+color;
+		figure_field[3][1] = 10+color;
+		figure_field[2][2] = 10+color;
+		figure_field[3][2] = 10+color;
+	}else if(s === 2 ){
+		for(let i = 1; i < 4; i ++){
+			figure_field[2][i] = 10+color;
+		}
+		figure_field[3][3] = 10+color;
+		current_height = 3;
+	}else if(s === 3){
+		for(let i = 1; i < 4; i ++){
+			figure_field[2][i] = 10+color;
+		}
+		figure_field[3][2] = 10+color;
+		current_height = 3;
+		}else if(s === 4){
+		figure_field[3][1] = 10+color;
+		figure_field[2][1] = 10+color;
+		figure_field[2][2] = 10+color;
+		figure_field[1][2] = 10+color;
+		}else if(s === 5){
+		figure_field[1][1] = 10+color;
+		figure_field[2][1] = 10+color;
+		figure_field[2][2] = 10+color;
+		figure_field[3][2] = 10+color;
+		current_height = 2;
+		}else if(s === 6){
+		figure_field[2][1] = 10+color;
+		figure_field[2][2] = 10+color;
+		figure_field[1][2] = 10+color;
+		figure_field[3][2] = 10+color;
+		current_height =2;
+		}
+	draw_next_figure();
+}
+
 
 function draw_figure() {
 	for(let x =0; x<10; x++){
@@ -132,6 +195,38 @@ function draw_figure() {
 			}else if (play_field[x][y] === 17 || play_field[x][y]===27){
 				ctx.fillStyle = '#FFFF00';
 				ctx.fillRect(x*30,y*30, 30,30);
+			}
+		}
+	}
+}
+
+function draw_next_figure() {
+	for(let x =0; x<5; x++){
+		for(let y = 0; y < 5; y++){
+			if(figure_field[x][y] === 11){
+				ctx2.fillStyle = 'orange';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 10){
+				ctx2.fillStyle = 'white';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 12){
+				ctx2.fillStyle = 'green';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 13){
+				ctx2.fillStyle = 'red';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 14){
+				ctx2.fillStyle = 'blue';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 15){
+				ctx2.fillStyle = 'purple';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 16){
+				ctx2.fillStyle = '#D0006E';
+				ctx2.fillRect(x*60,y*30, 60,30);
+			}else if (figure_field[x][y] === 17){
+				ctx2.fillStyle = '#FFFF00';
+				ctx2.fillRect(x*60,y*30, 60,30);
 			}
 		}
 	}
@@ -344,7 +439,7 @@ function moving(e){
 function next_step_is_fix(){
 	for(let x =0; x<10; x++){
 		for(let y = 0; y < 16; y++){
-			if(play_field[x][y] >= 10 && play_field[x][y]<20 && play_field[x][y+1]>20){
+			if(play_field[x][y] >= 10 && play_field[x][y]<20 && play_field[x][y+1]>=20){
 				return 1;
 				break;
 			}else{
@@ -570,13 +665,19 @@ function check_for_line_and_shift() {
 		s++;
 	}
 	score +=(line_y.length*10);
-	document.title ="score: "+score ;
+	let final_output = '';
+	for(let x =0; x<6-score.toString().length; x++){
+		final_output+='0';
+	}
+	final_output +=score.toString(10);
+	console.log(final_output, typeof final_output);
+	document.getElementById('score').innerHTML = final_output;
 	let shift_temp =0;
 
 	if(line_y.length>0){
 	for(let y=Math.min(...line_y)-1;y>=0; y--){
 		for(let x =0; x<10;x++){
-			if(play_field[x][y]>20){
+			if(play_field[x][y]>=20){
 				shift_temp = play_field[x][y];
 				play_field[x][y] =0;
 				play_field[x][y+line_y.length] = shift_temp;

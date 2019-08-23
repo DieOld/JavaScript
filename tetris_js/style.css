@@ -3,5 +3,20 @@ body{
 }
 canvas{
 	border:1px solid white;
-	margin-left: 35%;
+
+}
+.main_row{
+	border: 2px solid white;
+
+}
+#start_button{
+	margin-left: 70px;
+}
+.score{
+	font-size:30px;
+	color:white;
+}
+p{
+	font-size: 20px;
+	color: white;
 }

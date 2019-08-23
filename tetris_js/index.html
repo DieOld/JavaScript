@@ -5,11 +5,38 @@
 </head>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script type="text/javascript" src="script.js"></script>
-<body>
-	<canvas id="canvas_id" width="300px" height="480px">
-	</canvas>
-<button id="start_button" onclick="clearly_start()">
-	START
-</button>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<body class="bg-dark">
+
+<div class="container">
+<div class="row"><div class="col d-flex justify-content-center">
+	<div class="row">
+
+	<div class="col-4">
+		<canvas id="canvas_id" width="300px" height="480px">
+		</canvas>
+	</div>
+
+	<div class="col" style="margin-left: 170px;">
+	<div class="row d-flex">
+		<div class="col score">score:<br/>
+		<p id="score">000000</p></div>
+	</div>
+		<div class="row">
+			<div class="col">
+				<p style="margin-top: 100px;">Next figure:</p>
+				<canvas id="next_figure" style="width: 120px; height: 120px;  ">canvas does not support</canvas>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col d-flex justify-content-left">
+			<button class="btn btn-info" style="margin-top: 100px; margin-left: 15px;" onclick="clearly_start()"> START</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+</div>
+</div></div>
 </body>
 </html>
