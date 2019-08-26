@@ -1,4 +1,8 @@
 canvas{
     border: 1px solid black;
     margin-left: 20%;
+
+}
+#canvas{
+    z-index: 0;
 }
