@@ -1,5 +1,5 @@
 let o1,o2,o3,o4,canvas, ctx, bg,bg1,bg1_pos_x, bg_pos_x = 0, bg_moving_animation, down_animation,bird, up_animation, between = 200;
-let down_velocity =5; let up_velocity = 5 score = 0;
+let down_velocity =5; let up_velocity = 5 ;score = 0;
 let bird_pos_y, bird_pos_x, bird_afk_moving , move_vector = 0, game=false;
 class obstacles {
 
