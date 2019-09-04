@@ -1,5 +1,5 @@
 let o1,o2,o3,o4,canvas, ctx, bg,bg1,bg1_pos_x, bg_pos_x = 0, bg_moving_animation, down_animation,bird, up_animation, between = 200;
-let down_velocity =5; let up_velocity = 5;
+let down_velocity =5; let up_velocity = 5 score = 0;
 let bird_pos_y, bird_pos_x, bird_afk_moving , move_vector = 0, game=false;
 class obstacles {
 
@@ -24,7 +24,7 @@ class obstacles {
     }
     check_for_lose(){
         if((bird_pos_x>this.pos_x && bird_pos_x<this.pos_x+60) && ((bird_pos_y<this.pos_y_up+600 )||(bird_pos_y+47>this.pos_y_down))&&(bird_pos_x+1 > this.pos_x)){
-            alert('lose');
+            alert('you lose. Your score is ' + score.toString());
             clearInterval(up_animation);
             clearInterval(down_animation);
             clearInterval(bg_moving_animation);
@@ -32,7 +32,7 @@ class obstacles {
                 bird_pos_y+=3;
                 draw();
             },2);
-        }
+        } else score +=1;
     }
 }
 window.onload = function () {
