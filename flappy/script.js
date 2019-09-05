@@ -145,11 +145,11 @@ addEventListener('keydown', function (key) {
             if(game){
             clearInterval(bird_afk_moving);
             up();}
+            key.preventDefault();
         break;
         case 13:
         if(un_bug_enter ==0 ) {start_pos(); un_bug_enter++;}
-
-            break;
+        break;
     }
 })
 function start_pos() {
