@@ -1,6 +1,6 @@
 let o1,o2,o3,o4,canvas, ctx, bg,bg1,bg1_pos_x, bg_pos_x = 0, bg_moving_animation, down_animation,bird, up_animation, between = 200;
 let down_velocity =5; let up_velocity = 5 ;score = 0;
-let bird_pos_y, bird_pos_x, bird_afk_moving , move_vector = 0, game=false;
+let bird_pos_y, bird_pos_x, bird_afk_moving , move_vector = 0, game=false,un_bug_enter = 0;
 class obstacles {
 
     constructor(){
@@ -11,6 +11,7 @@ class obstacles {
         this.pos_x = canvas.width;
         this.pos_y_down = Math.random()*(500-200)+200;
         this.pos_y_up = (this.pos_y_down-between)-600;
+        this.checking = 0;
         console.log(this.pos_y_down, this.pos_y_up);
     }
     update (){
@@ -20,19 +21,30 @@ class obstacles {
                 this.pos_y_down = Math.random()*(500-200)+200;
                 this.pos_y_up = this.pos_y_down-between-600;
                 console.log(this.pos_y_up,this.pos_y_down);
+                this.checking = 0;
             }
     }
     check_for_lose(){
-        if((bird_pos_x>this.pos_x && bird_pos_x<this.pos_x+60) && ((bird_pos_y<this.pos_y_up+600 )||(bird_pos_y+47>this.pos_y_down))&&(bird_pos_x+1 > this.pos_x)){
+        if(((bird_pos_y+39.5>this.pos_y_down||bird_pos_y<this.pos_y_up+598)&&(bird_pos_x+47>this.pos_x&&bird_pos_x<this.pos_x+50))){
             alert('you lose. Your score is ' + score.toString());
             clearInterval(up_animation);
             clearInterval(down_animation);
             clearInterval(bg_moving_animation);
+            game = false;
             let lose_animation = setInterval(function () {
-                bird_pos_y+=3;
+                bird_pos_y+=4;
                 draw();
+                if(bird_pos_y>canvas.height){
+                    clearInterval(lose_animation)
+                    setTimeout(function () {
+                        start_action();
+                    },1000);
+                }
             },2);
-        } else score +=1;
+        } else if(this.pos_x<bird_pos_x && this.checking == 0){
+            score++;
+            this.checking ++;
+        }
     }
 }
 window.onload = function () {
@@ -45,24 +57,31 @@ window.onload = function () {
   o2 = new obstacles();
   o3 = new obstacles();
   o4 = new obstacles();
-  o2.pos_x +=220;
-  o3.pos_x +=440;
-  o4.pos_x +=660;
-  bird.src = 'res/img/bird1.png';
-  bg1.src = 'res/img/back.png';
-  bg1_pos_x = canvas.width;//позиция второй картинки
-  bird_pos_y = (canvas.height/2)-(bird.height/2);//начальная позиция птицы
-  bird_pos_x = (canvas.width/2)-(bird.width/2);
-  bg.src = 'res/img/back.png'; //здесь присваиваем атрибуду нашей картинки источник
-  bg.onload = function(){
-      ctx.drawImage(bg,bg_pos_x,0);//рисовка картинки на нашем холсте
-  }; //Это функция когда картинка прогружается
-  bg1.onload = function(){
-   ctx.drawImage(bg1, bg1_pos_x,0)//отрисовка второй картинки, хотя мне кажется что это не обязательно
-  };
-    move_bg(); //функция которая вращает наш задний фон
-    afk_moving();
+  start_action();
 };
+function start_action(){
+    o1.pos_x = canvas.width;
+    o2.pos_x = o1.pos_x+220;
+    o3.pos_x =o2.pos_x+220;
+    o4.pos_x =o3.pos_x+220;
+    bird.src = 'res/img/bird1.png';
+    bg1.src = 'res/img/back.png';
+    bg_pos_x = 0;
+    bg1_pos_x = canvas.width;//позиция второй картинки
+    bird_pos_y = (canvas.height/2)-(bird.height/2);//начальная позиция птицы
+    bird_pos_x = (canvas.width/2)-(bird.width/2);
+    bg.src = 'res/img/back.png'; //здесь присваиваем атрибуду нашей картинки источник
+    bg.onload = function(){
+        ctx.drawImage(bg,bg_pos_x,0);//рисовка картинки на нашем холсте
+    }; //Это функция когда картинка прогружается
+    bg1.onload = function(){
+        ctx.drawImage(bg1, bg1_pos_x,0)//отрисовка второй картинки, хотя мне кажется что это не обязательно
+    };
+    move_bg(); //функция которая вращает наш задний фон
+    un_bug_enter =0;
+    score = 0;
+    afk_moving();
+}
 function  move_bg() {
     bg_moving_animation = setInterval(function () {//Задаем анимацию
         if(bg_pos_x-1<canvas.width*-1) bg_pos_x = canvas.width;//усновие, что если картинка полностью выехала за кадр// то она заменяет вторую картинку
@@ -84,7 +103,6 @@ function draw(){
     ctx.clearRect(0,0,canvas.width, canvas.height);// очищаем наш холст для перерисовки бг
     ctx.drawImage(bg, bg_pos_x,0);//рисуем.
     ctx.drawImage(bg1,bg1_pos_x,0);//рисуем
-    ctx.drawImage(bird,bird_pos_x,bird_pos_y);//рисовка птицы
     ctx.drawImage(o1.up_obstacle, o1.pos_x, o1.pos_y_up);
     ctx.drawImage(o1.down_obstacle, o1.pos_x, o1.pos_y_down);
     ctx.drawImage(o2.up_obstacle, o2.pos_x, o2.pos_y_up);
@@ -93,7 +111,14 @@ function draw(){
     ctx.drawImage(o3.down_obstacle, o3.pos_x, o3.pos_y_down);
     ctx.drawImage(o4.up_obstacle, o4.pos_x, o4.pos_y_up);
     ctx.drawImage(o4.down_obstacle, o4.pos_x, o4.pos_y_down);
-
+    ctx.drawImage(bird,bird_pos_x,bird_pos_y);//рисовка птицы
+    if(game){
+    ctx.font = '80px san-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(score.toString(),canvas.width/2,100);
+    ctx.strokeStyle = '#000000';
+    ctx.strokeText(score.toString(),canvas.width/2,100);
+}
 }
 
 function afk_moving(){
@@ -122,7 +147,8 @@ addEventListener('keydown', function (key) {
             up();}
         break;
         case 13:
-        if(!game) start_pos();
+        if(un_bug_enter ==0 ) {start_pos(); un_bug_enter++;}
+
             break;
     }
 })
