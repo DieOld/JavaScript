@@ -1,6 +1,7 @@
 let o1,o2,o3,o4,canvas, ctx, bg,bg1,bg1_pos_x, bg_pos_x = 0, bg_moving_animation, down_animation,bird, up_animation, between = 200;
 let down_velocity =5; let up_velocity = 5 ;score = 0;
 let bird_pos_y, bird_pos_x, bird_afk_moving , move_vector = 0, game=false,un_bug_enter = 0;
+let ctx_face, canvas_face, face;
 class obstacles {
 
     constructor(){
@@ -57,6 +58,10 @@ window.onload = function () {
   o2 = new obstacles();
   o3 = new obstacles();
   o4 = new obstacles();
+  face = new Image();
+  canvas_face = document.getElementById("my_face");
+  ctx_face = canvas_face.getContext("2d");
+  face.src = 'res/img/face.jpg';
   start_action();
 };
 function start_action(){
@@ -112,12 +117,23 @@ function draw(){
     ctx.drawImage(o4.up_obstacle, o4.pos_x, o4.pos_y_up);
     ctx.drawImage(o4.down_obstacle, o4.pos_x, o4.pos_y_down);
     ctx.drawImage(bird,bird_pos_x,bird_pos_y);//рисовка птицы
+    ctx_face.drawImage(face, 0,0);
     if(game){
     ctx.font = '80px san-serif';
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText(score.toString(),canvas.width/2,100);
     ctx.strokeStyle = '#000000';
     ctx.strokeText(score.toString(),canvas.width/2,100);
+}else if (un_bug_enter!=1){
+	ctx.font = '30px san-serif';
+    ctx.fillStyle = '#000000';
+    ctx.fillText("Ported to js by Vadym Tishchenko",canvas.width/4,canvas.height-80);
+    ctx.font = '50px san-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText("Press Enter for start", 220, 100);
+    ctx.strokeStyle = "#000000";
+    ctx.strokeText("Press Enter for start", 220,100);
+    
 }
 }
 
